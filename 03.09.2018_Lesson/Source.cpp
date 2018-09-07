@@ -39,8 +39,16 @@ void search(int *arr, int n) {
 	cin >> c;
 	for (; p1 < (arr + n / 2); p1++, p2--)
 	{
-		if (*p1 == c) cout << p1 - arr << endl;
-		if (*p2 == c) cout << p2 - arr << endl;
+		if (*p1 == c)
+		{
+			cout << p1 - arr << endl;
+			break;
+		}
+		if (*p2 == c)
+		{
+			cout << p2 - arr << endl;
+			break;
+		}
 	}
 }
 // 39.	*Написать программу, которая вычисляет сумму элементов массива, используя ДВА указателя на массив целых чисел.
@@ -93,7 +101,7 @@ void sum_even(int *arr, int n) {
 	int sum = 0;
 	while (p1 <= p2)
 	{
-		if (p1 == p2) sum += *p1;
+		if (p1 == p2 && (p1 - arr) % 2 == 0) sum += *p1;
 		else
 			if ((p1 - arr) % 2 == 0)
 				sum += *p1;
@@ -106,53 +114,65 @@ void sum_even(int *arr, int n) {
 }
 // 44.	**Даны два массива : А[M] и B[N](M и  N вводятся с клавиатуры).Необходимо создать третий массив минимально возможного размера,
 // в котором нужно собрать элементы массивов A и B, которые не являются общими для них
-void unique(int a[], int n, int b[], int m, int*&cc, int &d) {
-	int k = 0, k1 = 0;
+void not_common(int* a, int *b, int n, int m) {
+	int* pa, *pb;
+	pa = a;
+	pb = b;
+
+	int k = 0;
 	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n-1; j++)
-			if (a[i] == a[j]) k1++;
-	cout << k1 << endl;
+	{
+		int sum = 0;
+		for (int j = 0; j < m; j++)
+		{
+			if (a[i] == b[j]) sum++; // количество встречающихся в обоих массивах
+		}
+		if (sum == 0) k++; // количество необщих элементов
+	}
+
+	int k1 = 0; // то же для второго массива 
+	for (int i = 0; i < m; i++)
+	{
+		int sum = 0;
+		for (int j = 0; j < n; j++)
+		{
+			if (b[i] == a[j]) sum++;
+		}
+		if (sum == 0) k1++;
+	}
+	int *c;
+	c = new int[k + k1];
+	int h = 0;
+	for (int i = 0; i < n; i++)
+	{
+		int sum = 0;
+		for (int j = 0; j < m; j++)
+		{
+			if (a[i] == b[j]) sum++;
+		}
+		if (sum == 0) c[h++] = a[i];
+	}
 
 	for (int i = 0; i < m; i++)
-		for (int j = 0; j < m-1; j++)
-			if (b[i] == b[j]) k1++;
-	cout << k1 << endl;
-
-	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < m; j++)
+		int sum = 0;
+		for (int j = 0; j < n; j++)
 		{
-			if (a[i] == b[j]) k += 2;
+			if (b[i] == a[j]) sum++;
 		}
-	}
-	cout << k << " " << k1 << endl;
-	int *c = new int[n + m - (k-k1)];
-	/*int *tmp = new int(n + m);*/
-
-	int p = 0;
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < m; j++)
-		{
-			if (a[i] != b[j])
-			{
-				c[p] = a[i];
-				c[p++] = b[i];
-			}
-		}
+		if (sum == 0) c[h++] = b[i];
 	}
 
-	for (int i = 0; i < p; i++)
+	for (int i = 0; i < k + k1; i++)
 		cout << c[i] << " ";
-	cout << endl;
-	
-	delete[] cc;
-	cc = c;
-	d = k;
+	cout << endl << endl;
 
+	delete[] c;
 }
-
-
+// 59.	**Функция принимает указатель на массив, его размер и указатель на переменную.
+// Определить, является ли переменная ячейкой массива(т.е значение указателя совпадает с одним из адресов ячеек массива),
+// является ли содержимое указателем адресом внутри массива, является ли содержимое указателя никак ни связанным с массивом адресом.
+// Функция должна вернуть три логических значения для каждого случая.
 
 
 int main()
@@ -248,75 +268,14 @@ int main()
 			sum_even(a, n);
 		}
 		break;
-		case 5:
-		{
-			
-			int a[6] = { 2, 4, 7, 5, 2, 0 };
-			int b[5] = { 4, 5, 9, 4, 8 };
-
-			int d = 0;
-			int *cc = new int[d];
-			unique(a, 6, b, 5, cc, d);
-
-			delete[] cc;
-		}
-		break;
 		case 6:
 		{
 			int a[] = { 2, 4, 7, 5, 2, 0 };
 			int b[] = { 4, 5, 9, 4, 8 };
+			int n, m;
+			cin >> n >> m;
 
-			int* pa, *pb;
-			pa = a;
-			pb = b;
-
-			int k = 0;
-			for (int i = 0; i < 6; i++)
-			{
-				int sum = 0;
-				for (int j = 0; j < 5; j++)
-				{
-					if (a[i] == b[j]) sum++;
-				}
-				if (sum = 0) k++;
-			}
-
-			int k1 = 0;
-			for (int i = 0; i < 5; i++)
-			{
-				int sum = 0;
-				for (int j = 0; j < 6; j++)
-				{
-					if (b[i] == a[j]) sum++;
-				}
-				if (sum = 0) k1++;
-			}
-			int *c;
-			c = new int[k + k1];
-			int h = 0;
-			for (int i = 0; i < 6; i++)
-			{
-				int sum = 0;
-				for (int j = 0; j < 5; j++)
-				{
-					if (a[i] == b[j]) sum++;
-				}
-				if (sum == 0) c[h++] = a[i];
-			}
-
-			for (int i = 0; i < 5; i++)
-			{
-				int sum = 0;
-				for (int j = 0; j < 6; j++)
-				{
-					if (a[i] == b[j]) sum++;
-				}
-				if (sum == 0) c[h++] = b[i];
-			}
-
-			for (int i = 0; i < k + k1; i++)
-				cout << c[i] << " ";
-			cout << endl << endl;
+			not_common(a, b, n, m);
 		}
 		break;
 		case 7:
@@ -371,33 +330,25 @@ int main()
 			cout << *p << " " << *p1 << " " << *p2 << endl;
 
 			int *min, *max;
-			/*if (**pp > **pp1 && **pp > **pp2) pp = &max;
-			else if (**pp1 > **pp2 && **pp1 > **pp2) pp1 = &max;
-			else pp2 = &max;
 
-			if (**pp < **pp1 && **pp < **pp2) pp = &min;
-			else if (**pp1 < **pp2 && **pp1 < **pp2) pp1 = &min;
-			else pp2 = &min;*/
+			if (a > b && a > c) p = &a;
+			else if (b > a&&b > c) p = &b;
+			else p = &c;
 
-			if (a > b) *pp = &a;
-			else *pp = &b;
-			if (c > **pp) *pp = &c;
+			if (a < b && a < c) p2 = &a;
+			else if (b < a&&b < c) p2 = &b;
+			else p2 = &c;
 
-			if (a < b) *pp2 = &a;
-			else *pp2 = &b;
-			if (c < **pp2) *pp2 = &c;
+			swap(*(*pp), *(*pp2)); 
 
-			swap(**pp, **pp2); 
-
-			cout << **pp << " " << **pp1 << " " << **pp2 << endl;
+			cout << a << " " << b << " " << c << endl;
 		}
 		break;
 		case 11:
 		{
-			// 59.	**Функция принимает указатель на массив, его размер и указатель на переменную.
-			// Определить, является ли переменная ячейкой массива(т.е значение указателя совпадает с одним из адресов ячеек массива),
-			// является ли содержимое указателем адресом внутри массива, является ли содержимое указателя никак ни связанным с массивом адресом.
-			// Функция должна вернуть три логических значения для каждого случая.
+			
+
+
 		}
 		break;
 		default:
